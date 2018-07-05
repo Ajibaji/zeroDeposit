@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ned Ned's Cheese Emporium</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    body { padding: 30px; }
+  </style>
+</head>
+<body>
+
+    <h1>Cheese</h1>
+    <p id="cheese"></p>
+
+</body>
+</html>
+
+<script>  
+    const salePriceInSterling = 19.99
+    const priceOfCheese = 3.24;
+    const p = document.getElementById('cheese');
+    const url = 'https://openexchangerates.org/api/latest.json?app_id=10deb989caa1449bb20ad778755d82f3';
+    fetch(url)
+    .then(
+        function(response) {
+        response.json()
+        .then(
+            function(data) {
+                var cheeseString = "";
+                var i = 0;
+                var euro = data.rates.EUR;
+                var sterling = data.rates.GBP;
+                var rate = sterling/euro;
+                var oneBlockInSterling = rate * priceOfCheese;
+                var  numberOfBlocks = Math.floor(salePriceInSterling/oneBlockInSterling)
+               
+                do {
+                    cheeseString += '🧀';
+                    i++;
+                } while (i < numberOfBlocks);
+               
+                p.innerHTML = `Today you can buy ${numberOfBlocks} blocks of cheese for £19.99 ${cheeseString}.`;
+            }
+        );
+        }
+    )
+    .catch(function(err) {
+    console.log('Fetch Error :-S', err);
+    });
+</script>
